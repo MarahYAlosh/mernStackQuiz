@@ -18,15 +18,21 @@ console.log(__dirname);
 const app = express();
 
 app.use(morgan("tiny"));
-app.use(cors({
+app.use(
+  cors({
     origin: ["http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true,
-  }));
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 config();
 
+// app.use(express.static(path.join(__dirname,'/client/build')))
+// app.get('*',(req,res)=>{ 
+//   res.sendFile(path.join(__dirname,'/client/build/index.html'))
+// })
 
 
 app.use("/api", router);
@@ -34,7 +40,7 @@ app.use("/api", router);
 const verifyStudent = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.json("issing Token");
+    return res.json("missing Token");
   } else {
     jwt.verify(token, "jwt-secret-key", (err, decoded) => {
       if (err) {
