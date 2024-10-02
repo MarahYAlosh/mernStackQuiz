@@ -18,9 +18,7 @@ console.log(__dirname);
 const app = express();
 
 app.use(morgan("tiny"));
-app.use(
-  cors()
-);
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 config();
