@@ -18,19 +18,12 @@ console.log(__dirname);
 const app = express();
 
 app.use(morgan("tiny"));
-app.use(cors({
-    origin: ["http://localhost:3000","https://mernstackquiz-8.onrender.com"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  }));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 config();
 
-// app.use(express.static(path.join(__dirname,'/client/build')))
-// app.get('*',(req,res)=>{ 
-//   res.sendFile(path.join(__dirname,'/client/build/index.html'))
-// })
+
 
 app.use("/api", router);
 
