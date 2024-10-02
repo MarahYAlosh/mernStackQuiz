@@ -19,11 +19,7 @@ const app = express();
 
 app.use(morgan("tiny"));
 app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
+  cors()
 );
 app.use(express.json());
 app.use(cookieParser());
