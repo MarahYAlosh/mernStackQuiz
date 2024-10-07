@@ -30,7 +30,7 @@ app.use("/api", router);
 const verifyStudent = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.json("issing Token");
+    return res.json("missing Token");
   } else {
     jwt.verify(token, "jwt-secret-key", (err, decoded) => {
       if (err) {
