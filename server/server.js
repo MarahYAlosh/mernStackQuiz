@@ -8,15 +8,11 @@ import cookieParser from "cookie-parser";
 import userSchema from "./models/userSchema.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import path from 'path';
-import { fileURLToPath } from "url";
-
-const __filename=fileURLToPath(import.meta.url)
-const __dirname= path.dirname(__filename)
-console.log(__dirname);
+//import questionSchema from "./models/juniorquestionSchema.js";
 
 const app = express();
 
+// middlleWare
 app.use(morgan("tiny"));
 app.use(
   cors({
@@ -29,18 +25,12 @@ app.use(express.json());
 app.use(cookieParser());
 config();
 
-// app.use(express.static(path.join(__dirname,'/client/build')))
-// app.get('*',(req,res)=>{ 
-//   res.sendFile(path.join(__dirname,'/client/build/index.html'))
-// })
-
-
 app.use("/api", router);
 
 const verifyStudent = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.json("missing Token");
+    return res.json("issing Token");
   } else {
     jwt.verify(token, "jwt-secret-key", (err, decoded) => {
       if (err) {
@@ -70,6 +60,8 @@ app.get("/", verifyStudent, (req, res) => {
     res.json(error);
   }
 });
+
+
 
 connect()
   .then(() => {
@@ -107,13 +99,15 @@ app.get("/teacher", verifyTeacher, (req, res) => {
   res.json("Success");
 });
 
+
+
 app.post("/addTeacher", (req, res) => {
   const { name, email, password } = req.body;
   bcrypt
     .hash(password, 10)
     .then((hash) => {
       userSchema
-        .create({ name, email, password: hash, role: "admin" })
+      .create({ name, email, password: hash , role : "admin"})
         .then((user) => {
           res.json("Success");
         })
@@ -121,6 +115,14 @@ app.post("/addTeacher", (req, res) => {
     })
     .catch((err) => res.json(err));
 });
+
+
+
+
+
+
+
+
 
 app.post("/register", (req, res) => {
   const { name, email, password } = req.body;
