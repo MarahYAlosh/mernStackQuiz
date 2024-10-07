@@ -8,11 +8,15 @@ import cookieParser from "cookie-parser";
 import userSchema from "./models/userSchema.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-//import questionSchema from "./models/juniorquestionSchema.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log(__dirname);
 
 const app = express();
 
-// middlleWare
 app.use(morgan("tiny"));
 app.use(
   cors({
@@ -25,16 +29,22 @@ app.use(express.json());
 app.use(cookieParser());
 config();
 
+// app.use(express.static(path.join(__dirname,'/client/build')))
+// app.get('*',(req,res)=>{
+//   res.sendFile(path.join(__dirname,'/client/build/index.html'))
+// })
+
 app.use("/api", router);
 
 const verifyStudent = (req, res, next) => {
   const token = req.cookies.token;
+
   if (!token) {
     return res.json("missing Token");
   } else {
     jwt.verify(token, "jwt-secret-key", (err, decoded) => {
       if (err) {
-        return res.json("Error eith Token");
+        return res.json("Error with Token");
       } else {
         if (decoded.role === "student") {
           next();
@@ -56,12 +66,11 @@ app.get("/getName", (req, res) => {
 app.get("/", verifyStudent, (req, res) => {
   try {
     res.json("Success");
+    res.header({});
   } catch (error) {
     res.json(error);
   }
 });
-
-
 
 connect()
   .then(() => {
@@ -78,9 +87,7 @@ connect()
 
 const verifyTeacher = (req, res, next) => {
   const token = req.cookies.token;
-  if (!token) {
-    return res.json("missing Token");
-  } else {
+  if (token) {
     jwt.verify(token, "jwt-secret-key", (err, decoded) => {
       if (err) {
         return res.json("Error with Token");
@@ -92,6 +99,8 @@ const verifyTeacher = (req, res, next) => {
         }
       }
     });
+  } else {
+    return res.json("missing Token");
   }
 };
 
@@ -99,15 +108,13 @@ app.get("/teacher", verifyTeacher, (req, res) => {
   res.json("Success");
 });
 
-
-
 app.post("/addTeacher", (req, res) => {
   const { name, email, password } = req.body;
   bcrypt
     .hash(password, 10)
     .then((hash) => {
       userSchema
-      .create({ name, email, password: hash , role : "admin"})
+        .create({ name, email, password: hash, role: "admin" })
         .then((user) => {
           res.json("Success");
         })
@@ -115,14 +122,6 @@ app.post("/addTeacher", (req, res) => {
     })
     .catch((err) => res.json(err));
 });
-
-
-
-
-
-
-
-
 
 app.post("/register", (req, res) => {
   const { name, email, password } = req.body;
