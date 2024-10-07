@@ -20,9 +20,9 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://mernstackquiz-8.onrender.com"],
     methods: ["GET", "POST"],
-    credentials: true,
+    credentials: true, // Allow credentials (cookies) to be sent
   })
 );
 app.use(express.json());
