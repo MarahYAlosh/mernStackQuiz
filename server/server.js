@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);console.log(__dirname);
 const app = express();
 
 app.use(morgan("tiny"));app.use(
-  cors({    origin: ["http://localhost:3000", "https://marahyalosh.github.io/frontQuizApp"],
+  cors({    origin: [ "https://marahyalosh.github.io/frontQuizApp" , "http://localhost:3000"],
     methods: ["GET", "POST"],    credentials: true, // للسماح بإرسال الكوكيز
   }));
 app.use(express.json());app.use(cookieParser());
