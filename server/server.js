@@ -11,7 +11,7 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(
   cors({
-    origin: ["https://mernstackquiz-8.onrender.com", "http://localhost:3000"],
+    origin: ["https://mernstackquiz-8.onrender.com", "http://localhost:3000","https://marahyalosh.github.io"],
     methods: ["GET", "POST"],
     credentials: true,
   })
